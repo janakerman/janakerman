@@ -1,11 +1,20 @@
 import React from 'react'
+import styled from 'styled-components'
 
 // Import typefaces
 import 'typeface-montserrat'
 import 'typeface-merriweather'
 
-import profilePic from './profile-pic.jpg'
+import profilePic from '../assets/jan.jpg'
 import { rhythm } from '../utils/typography'
+
+const Avatar = styled.img`
+  margin-right: ${rhythm(1 / 2)};
+  margin-bottom: 0;
+  width: ${rhythm(2)};
+  height: ${rhythm(2)};
+  border-radius: 100%;
+`
 
 class Bio extends React.Component {
   render() {
@@ -16,18 +25,9 @@ class Bio extends React.Component {
           marginBottom: rhythm(2.5),
         }}
       >
-        <img
-          src={profilePic}
-          alt={`Kyle Mathews`}
-          style={{
-            marginRight: rhythm(1 / 2),
-            marginBottom: 0,
-            width: rhythm(2),
-            height: rhythm(2),
-          }}
-        />
+        <Avatar src={profilePic} alt="Jan Akerman"/>
         <p>
-          Written by <strong>Jan Akerman</strong> who lives and works in London, UK.{' '}
+          Senior Full Stack Developer @ <a href="https://www.scottlogic.com/">Scott Logic</a>. London, UK.{' '}
         </p>
       </div>
     )
