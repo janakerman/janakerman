@@ -15,21 +15,25 @@ const Avatar = styled.img`
   height: ${rhythm(2)};
   border-radius: 100%;
 `
+const Wrapper = styled.div`
+  display: flex;
+  margin-bottom: ${rhythm(2.5)};
+`
+const Blurb = styled.p`
+  text-align: left;
+  margin-bottom: 0;
+`
 
 class Bio extends React.Component {
   render() {
     return (
-      <div
-        style={{
-          display: 'flex',
-          marginBottom: rhythm(2.5),
-        }}
-      >
+      <Wrapper>
         <Avatar src={profilePic} alt="Jan Akerman"/>
-        <p>
-          Senior Full Stack Developer @ <a href="https://www.scottlogic.com/">Scott Logic</a>. London, UK.{' '}
-        </p>
-      </div>
+        <div>
+          <Blurb>Senior Full Stack Developer @ <a href="https://www.scottlogic.com/">Scott Logic</a>. London, UK.</Blurb>
+          <Blurb>Dev - DevOps - Java - Javascript - Kubernetes</Blurb>
+        </div>
+      </Wrapper>
     )
   }
 }
