@@ -43,7 +43,7 @@ RUN git clone git@github.com:janakerman/janakerman.git
 # Choose the base image for our final image
 FROM alpine
 
-# Copy accross the files from our `intermediate` container
+# Copy across the files from our `intermediate` container
 RUN mkdir files
 COPY --from=intermediate /janakerman/README.md /files/README.md
 ```
@@ -57,7 +57,7 @@ docker build --build-arg SSH_KEY="$MY_KEY" --tag clone-example .
 > Successfully tagged clone-example:latest
 ```
 
-You can inspect the container to see that the relevant files have been copied accross.
+You can inspect the container to see that the relevant files have been copied across.
 
 ```
 docker run -ti --rm clone-example ls /files
