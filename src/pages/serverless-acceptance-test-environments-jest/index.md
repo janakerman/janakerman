@@ -4,8 +4,6 @@ date: "2019-03-12"
 tags: ['javascript','jest','serverless', 'testing', 'acceptance testing', 'AWS']
 ---
 
-#Serverless acceptance testing with Jest
-
 So you’ve started a Serverless project. If you’re anything like me, you’ve thrown together a quick prototype which you’ve been deploying and testing in your ‘dev’ environment. You know you should be writing tests, but this is a small side project, so you soldier on. Before you know it, you’re making changes, refactoring your code, and having to check a growing number of functions manually. You know that you need to automate this.
 
 This blog post is going to walk through setting up an isolated ephemeral test environment for a Serverless project’s acceptance tests.
