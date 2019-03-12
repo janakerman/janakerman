@@ -1,7 +1,7 @@
 ---
 title: Serverless acceptance testing with Jest
-date: "2018-09-30"
-tags: ['javascript','jest','serverless', 'testing', 'acceptance testing']
+date: "2019-03-12"
+tags: ['javascript','jest','serverless', 'testing', 'acceptance testing', 'AWS']
 ---
 
 #Serverless acceptance testing with Jest
