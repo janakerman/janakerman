@@ -1,6 +1,7 @@
 ---
 title: Cloning Files From Git into a Docker Image
 date: "2018-09-30"
+tags: ['docker','git clone']
 ---
 
 I came across a scenario recently whereby I had a hard requirement to create a fully ready Jenkins container. This meant baking in our job DSL into the image itself, but these files were in a Git repository.
