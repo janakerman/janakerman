@@ -12,6 +12,7 @@ module.exports = {
         frontmatter: {
           title: 'Thoughts on Jest Snapshots',
           date: '2017-09-01',
+          tags: ['Jest', 'Javascript']
         },
         fields: {
           readingTime: { text: '4 min read' },
@@ -24,6 +25,7 @@ module.exports = {
         frontmatter: {
           title: 'Leadership Election with Apache Curator',
           date: '2018-03-13',
+          tags: ['Apache Curator','Zookeeper', 'Java']
         },
         fields: {
           readingTime: { text: '7 min read' },        }
