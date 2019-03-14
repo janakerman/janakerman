@@ -14,10 +14,10 @@ class BlogIndex extends React.Component {
       this,
       'props.data.site.siteMetadata.description'
     )
-    const posts = get(this, 'props.data.allMarkdownRemark.edges')
+    const posts = get(this, 'props.data.allMarkdownRemark.edges').map(n => n.node)
     const externalPosts = get(this, 'props.data.site.siteMetadata.externalPosts')
     const allPosts = posts.concat(externalPosts)
-      .sort((p1, p2) => Date.parse(p1.Date) < Date.parse(p2.Date))
+      .sort((p1, p2) => Date.parse(p2.frontmatter.date) - Date.parse(p1.frontmatter.date))
   
 
     return (
@@ -28,43 +28,36 @@ class BlogIndex extends React.Component {
           title={siteTitle}
         />
         <Bio />
-        {allPosts.map(post => posts.includes(post) ? this.renderInternalPost(post) : this.renderExternalPost(post))}
+        {allPosts.map(post => this.renderInternalPost(post))}
       </Layout>
     )
   }
 
-  renderInternalPost({ node }) {
+  renderInternalPost(post) {
     return this.renderPost({
-      title: get(node, 'frontmatter.title') || node.fields.slug,
-      slug: node.fields.slug,
-      date: node.frontmatter.date,
-      excerpt: node.excerpt,
-      readingTime: node.fields.readingTime.text
+      title: get(post, 'frontmatter.title') || post.fields.slug,
+      slug: post.fields.slug,
+      url: post.url,
+      domain: post.domain,
+      date: post.frontmatter.date,
+      excerpt: post.excerpt,
+      readingTime: post.fields.readingTime.text,
     })
   }
 
-  renderExternalPost({ Title, Url, Date, Excerpt, ReadingTime }) {
-    return this.renderPost({
-      title: `${Title} [External]`,
-      slug: Url,
-      date: Date,
-      excerpt: Excerpt,
-      readingTime: ReadingTime,
-      LinkComponent: ({children, to, style}) => <a style={style} href={to}>{children}</a>
-    })
-  }
+  renderPost({ excerpt, title, date, readingTime, slug, url, domain}) {
+    title = slug ? title : `${title} [${domain}]` // Use slug to check if internal post.
 
-  renderPost({ excerpt, title, date, readingTime, slug, LinkComponent = Link }) {
+    const LinkComponent = slug ? <Link style={{ boxShadow: 'none', }} to={slug}>{title}</Link> :
+       <a style={{ boxShadow: 'none', }} href={url}>{title}</a>
     return (
-      <div key={slug}>
+      <div key={slug || url}>
         <h3
           style={{
             marginBottom: rhythm(1 / 4),
           }}
         >
-          <LinkComponent style={{ boxShadow: 'none', }} to={slug}>
-            {title}
-          </LinkComponent>
+        { LinkComponent }
         </h3>
         <small>{date}</small> - <small>{readingTime}</small>
         <p dangerouslySetInnerHTML={{ __html: excerpt }} />
@@ -79,14 +72,19 @@ export const pageQuery = graphql`
   query {
     site {
       siteMetadata {
-        title
-        description
         externalPosts {
-          Date
-          Url
-          Excerpt
-          Title
-          ReadingTime
+          url
+          domain
+          excerpt
+          frontmatter {
+            date(formatString: "DD MMMM, YYYY")
+            title
+          }
+          fields {
+            readingTime {
+              text
+            }
+          }
         }
       }
     }

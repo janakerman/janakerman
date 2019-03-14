@@ -6,18 +6,27 @@ module.exports = {
     siteUrl: 'https://janakerman.co.uk/',
     externalPosts: [
       { 
-        Title: 'Thoughts on Jest Snapshots',
-        Url: 'https://blog.scottlogic.com/2017/09/01/thoughts-on-jest-snapshots.html',
-        Date: '2017-09-01',
-        Excerpt: 'Jest is a testing framework that provides the testing tools we now expect to see in a modern software project. It provides fast parallelised test running, with a familiar assertion syntax, built in code coverage, Snapshots and more. In this post, I’ll be investigating Snapshots and laying out some thoughts!',
-        ReadingTime: '4 min read'
+        url: 'https://blog.scottlogic.com/2017/09/01/thoughts-on-jest-snapshots.html',  
+        excerpt: 'Jest provides fast parallelised test running, with a familiar assertion syntax, built in code coverage, Snapshots and more. In this post, I’ll be investigating Snapshots and laying out some thoughts...',
+        domain: 'scottlogic.com',
+        frontmatter: {
+          title: 'Thoughts on Jest Snapshots',
+          date: '2017-09-01',
+        },
+        fields: {
+          readingTime: { text: '4 min read' },
+        }
       },
       { 
-        Title: 'Leadership Election with Apache Curator',
-        Url: 'https://blog.scottlogic.com/2018/03/13/leadership-election-with-apache-curator.html',
-        Date: '2018-03-13',
-        Excerpt: 'Distributed computing is difficult, but fortunately it’s never been easier. Companies like Netflix, Facebook, LinkedIn, etc, have been solving difficult problems and open sourcing the solutions. This post is going to look at how we can easily implement distributed leadership election using Apache Curator.',
-        ReadingTime: '7 min read'
+        url: 'https://blog.scottlogic.com/2018/03/13/leadership-election-with-apache-curator.html',
+        excerpt: 'This post is going to look at how we can easily implement distributed leadership election using Apache Curator...',
+        domain: 'scottlogic.com',
+        frontmatter: {
+          title: 'Leadership Election with Apache Curator',
+          date: '2018-03-13',
+        },
+        fields: {
+          readingTime: { text: '7 min read' },        }
       }
     ]
   },
