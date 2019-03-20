@@ -30,13 +30,13 @@ I am creating a simple serverless application so that devs in the Scott Logic Lo
 
 I highlighted the following entities:
 
-*Breakfast* - an event for which devs can order breakfast.
+**Breakfast** - an event for which devs can order breakfast.
 
-*Order* - a dev’s breakfast.
+**Order** - a dev’s breakfast.
 
-*Item* - An order is for an item, and an office has a list of possible items.
+**Item** - An order is for an item, and an office has a list of possible items.
 
-*Dev* - a hungry dev.
+**Dev** - a hungry dev.
 
 A _Breakfast_ has many _Orders_, which has _Items_, which is made by a _Dev_. Simple.
 
@@ -142,22 +142,23 @@ If we extend our `GSI` to use a 'composite key' (an index using a `HASH` and a `
 ### Primary Index (representation)
 
 Here is what the table looks like from the perspective of our `Primary Index`.
-| PartitionKey (PI-HASH) | SortKey (PI-SORT) | Data |(...Additional Fields)
-|---|---|---|---|
-|BREAKFAST-1  |**BREAKFAST**|**2019-04-22**||
-|BREAKFAST-2  |**BREAKFAST**|**2019-04-29**||
-|BREAKFAST-1  |ORDER-0001|||
-|BREAKFAST-1  |ORDER-0002|||
-|...||||
+
+| PartitionKey (PI-HASH) | SortKey (PI-SORT) | Data         |(...Additional Fields)|
+|------------------------|-------------------|--------------|----------------------|
+|BREAKFAST-1             |**BREAKFAST**      |**2019-04-22**|                      |
+|BREAKFAST-2             |**BREAKFAST**      |**2019-04-29**|                      |
+|BREAKFAST-1             |ORDER-0001         |              |                      |
+|BREAKFAST-1             |ORDER-0002         |              |                      |
+|...                     |                   |              |                      |
 
 Here is what our table now looks like from the perspective of our `GSI`:
 
 ### Global Secondary Index (representation)
-| SortKey (GSI-HASH) | Data (GSI-RANGE) | PartitionKey|(...Additional Fields)
-|---|---|---|---|
-|**BREAKFAST**|**2019-04-22**|BREAKFAST-1  ||
-|**BREAKFAST**|**2019-04-29**|BREAKFAST-2  ||
-|...||||
+| SortKey (GSI-HASH) | Data (GSI-RANGE) | PartitionKey|(...Additional Fields)|
+|--------------------|------------------|-------------|----------------------|
+|**BREAKFAST**       |**2019-04-22**    |BREAKFAST-1  |                      |
+|**BREAKFAST**       |**2019-04-29**    |BREAKFAST-2  |                      |
+|...                 |                  |             |                      |
 
 Notice that the two Order entries would be ignored in this index as they do not have a Data column value.
 
@@ -175,11 +176,11 @@ The only constraint that DynamoDB gives us is that there can only be a single re
 
 For the above constraint, if we add the breakfast date to the Breakfast entities ID, we can ensure that there can never exist two breakfasts for a given date.
 
-| PartitionKey (HASH) | SortKey (PI-SORT, GSI-HASH) | Data (GSI-RANGE) |(...Additional Fields)
-|---|---|---|---|
-|BREAKFAST-2019-04-22  |**BREAKFAST**|**2019-04-22**||
-|BREAKFAST-2019-04-29  |**BREAKFAST**|**2019-04-29**||
-|...||||
+| PartitionKey (HASH) | SortKey (PI-SORT, GSI-HASH) | Data (GSI-RANGE) |(...Additional Fields)|
+|---------------------|-----------------------------|------------------|----------------------|
+|BREAKFAST-2019-04-22 |**BREAKFAST**                |**2019-04-22**    |                      |
+|BREAKFAST-2019-04-29 |**BREAKFAST**                |**2019-04-29**    |                      |
+|...                  |                             |                  |                      |
 
 If we try to add an additional breakfast entry on `2019-04-22` or `2019-04-29`, we'll just update the record in question. If we want to ensure we don't overwrite existing records we can also use DynamoDB's API `put` a new record if no entry already exists.
 
