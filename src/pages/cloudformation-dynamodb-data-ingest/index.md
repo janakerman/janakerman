@@ -1,16 +1,16 @@
 ---
-title: CloudFormation Custom Resource - A DynamoDB Ingest Lambda
-date: "2019-04-24"
-tags: ['AWS', 'DynamoDB', 'CloudFormation', 'Custom Resource']
+title: Cloud Formation Custom Resources - Ingesting Data into DynamoDB
+date: "2019-03-24"
+tags: ['AWS', 'DynamoDB', 'CloudFormation', 'Custom Resources']
 ---
 
 This post uses CloudFormation to create a DynamoDB table with a Lambda backed 'Custom Resource', to automatically ingest data into the DynamoDB table upon creation.
 
-Here's a supporting (GitHub)[https://github.com/janakerman/blog-relational-dynamo] project if that's what you're after!
+Here's a supporting [GitHub](https://github.com/janakerman/blog-relational-dynamo) project if that's what you're after!
 
 ## The Problem
 
-For my (previous post)[https://janakerman.co.uk/relational-data-in-dynamodb/] on relational data in DynamoDB, I wanted to publish a CloudFormation template so that people could run the queries in their own AWS console as they followed along. I wanted to create the DynamoDB table, pre-populated with the example used in my blog post. Understandably, CloudFormation doesn't provide any functionality for ingesting data as it is primarily a tool for managing infrastructure.
+For my [previous post](https://janakerman.co.uk/relational-data-in-dynamodb/) on relational data in DynamoDB, I wanted to publish a CloudFormation template so that people could run the queries in their own AWS console as they followed along. I wanted to create the DynamoDB table, pre-populated with the example used in my blog post. Understandably, CloudFormation doesn't provide any functionality for ingesting data as it is primarily a tool for managing infrastructure.
 
 The CloudFormation template for the table itself was simple, but I needed a way to hook into the CloudFormation process. I thought of two ways of doing this:
 1. Creating a script that runs the CloudFormation template and ingests the data
@@ -20,7 +20,7 @@ Since option #1 is trivial, I decided to see how I might go about achieving #2, 
 
 ## CloudFormation Custom Resources
 
-CloudFormation custom resources allow you to write provisioning logic that will be run anytime your stack is created, updated or deleted. It provides a hook into the CloudFormation stack lifecycle whereby you can do whatever you please. AWS document an (example)[https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/walkthrough-custom-resources-lambda-lookup-amiids.html]) whereby as part of your stack creation you can fetch latest AMI for your instance type and region. Other use cases could be:
+CloudFormation custom resources allow you to write provisioning logic that will be run anytime your stack is created, updated or deleted. It provides a hook into the CloudFormation stack lifecycle whereby you can do whatever you please. AWS document an [example](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/walkthrough-custom-resources-lambda-lookup-amiids.html) whereby as part of your stack creation you can fetch latest AMI for your instance type and region. Other use cases could be:
 
 - Managing an AWS resource unsupported by CloudFormation
 - Managing infrastructure completely outside of AWS
@@ -32,7 +32,7 @@ The custom resource is defined with a `service token`. Reading the AWS documenta
 
 Let's imagine we're creating a Lambda backed custom resource (we will be soon!). We would:
 
-\1. Define our custom resource in our CloudFormation template:
+1. Define our custom resource in our CloudFormation template:
 
 ```yaml
 Resource:
@@ -84,7 +84,7 @@ As per my use case, I want to spin up a DynamoDB table and ingest some data. In 
 
 If I tried to do it all in one CloudFormation stack, I'd have a bit of a chicken or the egg problem. My Lambda would run before I'd had a chance to upload my ingest files. Additionally, I always try to think about how I would do this on a real project and having the separation of two templates would allow us to reuse the data ingest stack for as many other DynamoDB stacks as we want. On my current project, we have different data sets for each of our environments, with the scale increasing each step you take towards production - this would definitely be useful for us if we were using DynamoDB.
 
-_I'll be referencing this (GitHub project)[https://github.com/janakerman/blog-relational-dynamo] for the rest of the post._
+_I'll be referencing this [GitHub project](https://github.com/janakerman/blog-relational-dynamo) for the rest of the post._
 
 ### The Ingest Stack
 
@@ -212,14 +212,18 @@ Once the stack is completed, you should be able to check the data is in the via 
 
 `aws dynamodb scan --table-name RelationalExampleTable`
 
+// DIAGRAM HERE SHOWING FINAL STACK RELATIONSHIP
+
 ## Summary
 
 Using this approach you can create your environment and have it in a ready and useable state. You can see how this could be useful to spin up a test environment with some known data or ingest some initial user data from AWS Cognito, for example.
 
+Having environment initialisation hooked into the creation of the environment gives you a known and consistent starting point, avoiding the need for human hands to get involved in some error prone manual ingest process. I believe this is so important when it comes to building a reliable CI/CD pipline.
+
 Writing a script could have been potentially simpler, but I wouldn't have learnt about the power that custom resources give you in CloudFormation templates!
 
-Further considerations:
-- The custom resource is called at multiple points. Here's an interesting (post)[https://www.puresec.io/blog/a-deep-dive-on-aws-cloudformation-custom-resources] on the lifecycle of a custom resource.
+## Further considerations:
+- The custom resource is called at multiple points. Here's an interesting [post](https://www.puresec.io/blog/a-deep-dive-on-aws-cloudformation-custom-resources) on the lifecycle of a custom resource.
 - If your Lambda errors and doesn’t respond, this can cause the CloudFormation stack to hang until it times out (around an hour). Develop your Lambda locally with SAM local and use a mock event to test with!
 - If you want to re-ingest data, updating the stack won't help you as nothing has changed, but you can invoke the Lambda directly.
 
