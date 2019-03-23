@@ -191,3 +191,5 @@ This post has demonstrated a technique for modelling relational data in DynamoDB
 Using DynamoDB has some amazing benefits and can really get you up and running with a production-ready database in a short space of time. Whether this works long term for your application is really a call you'll have to make.
 
 As always, **abstract** the database code from your business code, and be pragmatic - don't be afraid to iterate quickly and throw things away when they don't work anymore!
+
+Checkout this (GitHub)[https://github.com/janakerman/blog-relational-dynamo] project and follow the instructions in the README.md to create a CloudFormation stack seeded with the data structure described in this post.
