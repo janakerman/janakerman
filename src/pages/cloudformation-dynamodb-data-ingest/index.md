@@ -71,9 +71,7 @@ Your Lambda will then be responsible to carry out its logic, and send an HTTP PU
 
 I visualise it like this:
 
-
-// DIAGRAM HERE SHOWING CF -> Custom Resource(Lambda) -> S3 -> CF
-
+![Custom Resource Diagram](custom-resource.jpeg)
 
 ## Getting To Work
 
@@ -152,7 +150,7 @@ You'll see something like this:
 ]
 ```
 
-Once this stack was created, I uploaded a (JSON file)[TODO-LINK-TO-GITHUB] into my S3 bucket.
+Once this stack was created, I uploaded a JSON file into my S3 bucket containing the records I wanted to load into DynamoDB.
 
 ```json
 [
@@ -212,7 +210,7 @@ Once the stack is completed, you should be able to check the data is in the via 
 
 `aws dynamodb scan --table-name RelationalExampleTable`
 
-// DIAGRAM HERE SHOWING FINAL STACK RELATIONSHIP
+![Stack Diagram](stack-diagram.jpeg)
 
 ## Summary
 
