@@ -1,0 +1,13 @@
+p {
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+}
+p::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
+
+:not(pre) > code[class*="language-"] {
+    white-space: initial;
+}
