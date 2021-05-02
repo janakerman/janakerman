@@ -192,4 +192,4 @@ Using DynamoDB has some amazing benefits and can really get you up and running w
 
 As always, **abstract** the database code from your business code, and be pragmatic - don't be afraid to iterate quickly and throw things away when they don't work anymore!
 
-Checkout this (GitHub)[https://github.com/janakerman/blog-relational-dynamo] project and follow the instructions in the README.md to create a CloudFormation stack seeded with the data structure described in this post.
+Checkout this [GitHub](https://github.com/janakerman/blog-relational-dynamo) project and follow the instructions in the README.md to create a CloudFormation stack seeded with the data structure described in this post.
