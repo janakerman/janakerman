@@ -71,7 +71,7 @@ render:
 The `render` target is using Grizzly to render the JSON and copy them into `dashboards/json`, cleaning up the intermediary files. The workflow now (1) `make watch` (2) edit Jsonnet files (3) `make render`. A pre-commit hook that runs `make render` simplifies this workflow even further.
 
 
-Ideally, you'd be applying these rendered dashboard JSON files as part of your CI/CD automation. I'd recommend Terraform (check out the [Grafana provider](https://registry.terraform.io/providers/grafana/grafana/latest/docs), but you could just use Grizzly (`grr apply`).
+Ideally, you'd be applying these rendered dashboard JSON files as part of your CI/CD automation. I'd recommend Terraform (check out the [Grafana provider](https://registry.terraform.io/providers/grafana/grafana/latest/docs)), but you could just use Grizzly (`grr apply`).
 
 ## A local instance
 
