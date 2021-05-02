@@ -79,7 +79,7 @@ Whilst I'd strongly recommend not using this workflow with your production Grafa
 
 The downside of using a local Grafana instance is that you don't have real data when viewing your changes. Hopefully, you're using an IaC tool to configure your Grafana instances data sources, so you could simply point it at your local instance. If your set up is relatively simple, a bash script is probably good enough and doesn't add too much complexity. The script below adds a Prometheus data source - hopefully, it provides some inspiration.
 
-```sh
+```bash
 #!/bin/bash
 
 GRAFANA_URL="http://localhost:3000"
