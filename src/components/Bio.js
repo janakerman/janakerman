@@ -31,7 +31,7 @@ class Bio extends React.Component {
         <Avatar src={profilePic} alt="Jan Akerman"/>
         <div>
           <Blurb>Engineer @ <a href="https://form3.tech/">Form3</a>. UK.</Blurb>
-          <Blurb>Github: [@janakerman](https://github.com/janakerman)</Blurb>
+          <Blurb>Github: <a href="https://github.com/janakerman">@janakerman</a></Blurb>
         </div>
       </Wrapper>
     )
