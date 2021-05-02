@@ -1,5 +1,5 @@
 ---
-title: Grafana Dashboard Workflow
+title: Grafana Scripting Workflow
 date: "2021-05-02"
 tags: ['Grafana', 'Jsonnet', 'devops', 'productivity']
 ---
@@ -75,10 +75,9 @@ Ideally, you'd be applying these rendered dashboard JSON files as part of your C
 
 ## A local instance
 
-Whilst I'd strongly recommend not using this workflow with your production Grafana instance, it's not necessary to use a local Grafana instance either. It really on how many engineers might be making changes concurrently. The downside of using a local Grafana instance is that you don't have real data when viewing your changes. Hopefully, you're using an IaC tool to configure your Grafana instances data sources, so you could simply point it at your local instance.
+Whilst I'd strongly recommend not using this workflow with your production Grafana instance, it's not necessary to use a local Grafana instance either. It really on how many engineers might be making changes concurrently. 
 
-
-If your set up is relatively simple, a bash script is probably good enough and doesn't add too much complexity. The script below adds a Prometheus data source - hopefully, it provides some inspiration.
+The downside of using a local Grafana instance is that you don't have real data when viewing your changes. Hopefully, you're using an IaC tool to configure your Grafana instances data sources, so you could simply point it at your local instance. If your set up is relatively simple, a bash script is probably good enough and doesn't add too much complexity. The script below adds a Prometheus data source - hopefully, it provides some inspiration.
 
 ```sh
 #!/bin/bash
