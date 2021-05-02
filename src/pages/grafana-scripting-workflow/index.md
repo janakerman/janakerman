@@ -73,7 +73,7 @@ The `render` target is using Grizzly to render the JSON and copy them into `dash
 
 Ideally, you'd be applying these rendered dashboard JSON files as part of your CI/CD automation. I'd recommend Terraform (check out the [Grafana provider](https://registry.terraform.io/providers/grafana/grafana/latest/docs)), but you could just use Grizzly (`grr apply`).
 
-## A local instance
+## Keep it local
 
 Whilst I'd strongly recommend not previewing edits on your production Grafana instance, it's not _necessary_ to use a local Grafana instance. The downside of using a local Grafana instance is that you don't have real data when viewing your changes. Hopefully, you're using an IaC tool to configure your Grafana instances data sources, so you could simply point it at your local instance to solve that.
 
