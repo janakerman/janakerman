@@ -1,7 +1,7 @@
 ---
 title: Mono-repo Pipelines with Tekton
 date: "2021-05-08"
-tags: ['tekton' 'devops', 'CD', 'kubernetes']
+tags: ['tekton', 'devops', 'CD', 'kubernetes']
 ---
 
 As a learning exercise, I wanted to see how I could put together a pipeline for a mono-repo with [Tekton](https://tekton.dev/). This post outlines a way of acheiving that, learning a little bit about Tekton interceptors along the way.
