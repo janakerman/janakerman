@@ -54,7 +54,7 @@ services:
 ```
 
 
-Any edits to the Jsonnet files under `dashboards/jsonnet/` will be visible after refreshing Grafana. When you're happy, all you need to do is render and commit the JSON files Wrapping this up in a Makefile keeps the workflow memorable and self-documenting.
+Any edits to the Jsonnet files under `dashboards/jsonnet/` will be visible after refreshing Grafana. When you're happy, all you need to do is render and commit the JSON files. Wrapping this up in a Makefile keeps the workflow memorable and self-documenting.
 
 ```Make
 
@@ -68,14 +68,14 @@ render:
 ```
 
 
-The `render` target is using Grizzly to render the JSON and copy them into `dashboards/json`, cleaning up the intermediary files. The workflow now (1) `make watch` (2) edit Jsonnet files (3) `make render`. A pre-commit hook that runs `make render` simplifies this workflow even further.
+The `render` target is using Grizzly to render the JSON and copy them into `dashboards/json`, cleaning up the intermediary files. The workflow is now (1) `make watch` (2) edit Jsonnet files (3) `make render`. A pre-commit hook that runs `make render` simplifies this workflow even further.
 
 
 Ideally, you'd be applying these rendered dashboard JSON files as part of your CI/CD automation. I'd recommend Terraform (check out the [Grafana provider](https://registry.terraform.io/providers/grafana/grafana/latest/docs)), but you could just use Grizzly (`grr apply`).
 
 ## Keep it local
 
-Whilst I'd strongly recommend not previewing edits on your production Grafana instance, it's not _necessary_ to use a local Grafana instance. The downside of using a local Grafana instance is that you don't have real data when viewing your changes. Hopefully, you're using an IaC tool to configure your Grafana instances data sources, so you could simply point it at your local instance to solve that.
+Whilst I'd strongly recommend not previewing edits on your production Grafana instance, it's not _necessary_ to use a local Grafana instance. The downside of using a local Grafana instance is that you don't have real data when viewing your changes. Hopefully, you're using an IaC (Infrastructure as Code) tool to configure your Grafana instances data sources, so you could simply point it at your local instance to solve that.
 
 If your set up is relatively simple, a bash script is probably good enough and doesn't add too much complexity. The script below adds a Prometheus data source - hopefully, it provides some inspiration.
 
@@ -104,7 +104,7 @@ curl -X POST $GRAFANA_URL/api/datasources -H 'Content-Type: application/json' --
 
 ## Gotchas
 
-Since Grizzly [_currently_](https://github.com/grafana/grizzly/issues/64) accepts only a single Jsonnet file as input, it's best to define _all_ of dashboards in a single Jsonnet file. Multiple JSON files can be rendered by nesting the dashboards within a JSON object as below.
+Since Grizzly [_currently_](https://github.com/grafana/grizzly/issues/64) accepts only a single Jsonnet file as input, it's best to define _all_ of the dashboards in a single Jsonnet file. Multiple JSON files can be rendered by nesting the dashboards within a JSON object as below.
 
 ```
 local grafana = import 'vendor/grafonnet/grafana.libsonnet'
@@ -127,6 +127,7 @@ local grafana = import 'vendor/grafonnet/grafana.libsonnet'
 }
 ```
 
+Jsonnet supports importing from other Jsonnet files so it's clean enough to maintain a single entrypoint and import the individual dashboards. 
 
 Note that not only is the `uuid` field important for Grizzly to work correctly, it's also used as the name for your rendered JSON file.
 
