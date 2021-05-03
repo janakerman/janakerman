@@ -29,11 +29,10 @@ To improve on this, I wanted to trigger individual pipelines depending on the su
 
 > EventListeners expose an addressable “Sink” to which incoming events are directed. Users can declare TriggerBindings to extract fields from events, and apply them to TriggerTemplates in order to create Tekton resources. In addition, EventListeners allow lightweight event processing using Event Interceptors.
 
-After a bit of research, I decided to use Event Interceptors 
 
 
-After a bit of research I settled on two potential options:
-* A parent pipeline that 
+
+![Component diagram](tekton-mono-components.svg)
 
 
 ## Alternatives
