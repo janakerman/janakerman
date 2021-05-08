@@ -1,6 +1,6 @@
 ---
 title: Mono-repo Pipelines with Tekton
-date: "2021-05-03"
+date: "2021-05-08"
 tags: ['tekton', 'devops', 'CD', 'kubernetes']
 ---
 
