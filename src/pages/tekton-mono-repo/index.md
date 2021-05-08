@@ -11,7 +11,9 @@ As a learning exercise, I wanted to see how I could put together a pipeline for 
 
 ## Tekton
 
-[Tekton](https://tekton.dev/) is an open-source framework for creating CI/CD systems. With Tekton, Kubernetes CRDs (Custom Resource Definitions) define the pipelines and with pipeline stages (tasks) orchestrated as Kubernetes pods. Tekton has captured my interest as using CRDs to define a pipelines opens up a lot of possibilities that I hope to explore in future posts.
+[Tekton](https://tekton.dev/) is an open-source framework for creating CI/CD systems. With Tekton, Kubernetes CRDs (Custom Resource Definitions) define the pipelines and pipeline stages (tasks) are orchestrated as Kubernetes pods.
+
+Tekton has recently captured my interest as I believe using CRDs to define a pipelines opens up a lot of possibilities. Possibilities that I hope to dig into further in some future posts.
 
 
 ## The problem
@@ -47,7 +49,7 @@ A Tekton `Trigger` can define interceptors allow you to process HTTP request pay
 
 In the pipeline setup described by this post, there's a single `EventTrigger` that references a unique `Trigger` for each project within the repo. Each `Trigger` references a `TriggerTemplate` configured to create `PipelineRun` for each sub-project's unique `Pipeline`.
 
-![Component diagram](tekton-mono-components.svg)
+![Tekton Dashboard](tekton-dashboard.svg)
 
 The mono-repo magic is handled by the two [interceptors](https://tekton.dev/docs/triggers/eventlisteners/#interceptors) that are chained together to process incoming Github Push Events, _conditionally_ trigger a pipeline associated with each sub-directories. If one project directory is modified, only that project's pipeline will run. If both are modified, both project pipelines will run.
 
