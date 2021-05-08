@@ -21,7 +21,7 @@ pipelines are usually defined in YAML (e.g Gitlab's `.gitlab-ci.yaml`, or Travis
 * Conditional logic to support optional build stages
 
 Modelling a mono-repository with the above features has a few issues:
-1. Poor visibility of a sub-project within the mono-repo as a single 'pipeline' is _shared_
+1. Poor visibility of a sub-project within the mono-repo as a single pipeline is _shared_
 2. Pipeline definitions become increasingly complex, filled with conditional stages
 
 Using Tekton's building blocks, I wanted to see if I could trigger a _different_ pipeline depending on the sub-directories that were modified for a given Git event.
@@ -32,9 +32,11 @@ Using Tekton's building blocks, I wanted to see if I could trigger a _different_
 
 > EventListeners expose an addressable “Sink” to which incoming events are directed. Users can declare TriggerBindings to extract fields from events, and apply them to TriggerTemplates in order to create Tekton resources. In addition, EventListeners allow lightweight event processing using Event Interceptors.
 
-At a high level, an `EventListener` defines the endpoint for incoming events, passes the events off a list of `Trigger`s, which define how to map the event to a given pipeline's input parameters.  
+At a high level, an `EventListener` defines the endpoint for incoming events, passes the events off to a list of `Trigger` resources, which define how to map the event to a given pipeline's input parameters.  
 
-A Tekton `Trigger` can define interceptors that allow you to process webhook payloads before any pipeline gets triggered, potentially deciding to hault execution. Tekton comes bundled with some out of the box interceptors:
+A Tekton `Trigger` can define interceptors that allow you to process webhook payloads before any pipeline gets triggered, potentially deciding not to trigger any pipeline at all. 
+
+Tekton comes bundled with some out of the box interceptors:
 
 * Interceptors for common webhook sources such as Gitlab, Github, Bitbucket. These handle signature verification and provide filtering for specific event types.
 * A [CEL Interceptor](https://tekton.dev/docs/triggers/eventlisteners/#cel-interceptors) that uses the CEL expression language to transform webhook payloads and evaluate predicates.
@@ -45,7 +47,6 @@ A Tekton `Trigger` can define interceptors that allow you to process webhook pay
 
 In the pipeline setup described by this post, there's a single `EventListener` that references a unique `Trigger` for each sub-project within the repo. Each `Trigger` references a `TriggerTemplate` configured to create `PipelineRun` for each sub-project's `Pipeline`.
 
-![Tekton Dashboard](tekton-dashboard.svg)
 
 The mono-repo magic is handled by the two [interceptors](https://tekton.dev/docs/triggers/eventlisteners/#interceptors) that are chained together to process incoming Github Push Events, _conditionally_ triggering a pipeline associated with each of the sub-directories. If one project directory is modified, only that project's pipeline will run. If both are modified then both project pipelines will run.
 
@@ -84,7 +85,7 @@ As can be seen above, the `Trigger` defines two interceptors:
 
 Multiple related projects can be co-located in the same repository, yet they can trigger independent pipelines. This keeps the pipeline definitions for each project _simple_, _specific_ and with a _single responsibility_. It's easy to find the pipeline execution for a given sub-project using either the Tekton Dashboard or `kubectl` as they are _unique_ pipelines.
 
-![Component diagram](tekton-mono-components.svg)
+![Tekton Dashboard](tekton-dashboard.png)
 
 Additionally, adding a `labels` fields to the `metadata` field of a `Pipeline` resource means we can easily discover pipelines that are associated with a given service or sub-project.
 
