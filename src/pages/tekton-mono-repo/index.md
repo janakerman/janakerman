@@ -13,9 +13,6 @@ As a learning exercise, I wanted to see how I could put together a pipeline for 
 
 [Tekton](https://tekton.dev/) is an open-source framework for creating CI/CD systems. With Tekton, Kubernetes CRDs (Custom Resource Definitions) define the pipelines and pipeline stages (tasks) are orchestrated as Kubernetes pods.
 
-Tekton has recently captured my interest as I believe using CRDs to define a pipelines opens up a lot of possibilities. Possibilities that I hope to dig into further in some future posts.
-
-
 ## The problem
 
 Typically, a CD pipeline would be initiated by a Git web hook, such as Github's [PushEvent](https://docs.github.com/en/developers/webhooks-and-events/github-event-types#pushevent). This web hook would trigger the repositories pipeline to execute.
