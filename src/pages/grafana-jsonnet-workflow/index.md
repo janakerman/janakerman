@@ -1,5 +1,5 @@
 ---
-title: Grafana Scripting Workflow
+title: Grafana Jsonnet Workflow
 date: "2021-05-02"
 tags: ['grafana', 'Jsonnet', 'devops', 'productivity']
 ---
