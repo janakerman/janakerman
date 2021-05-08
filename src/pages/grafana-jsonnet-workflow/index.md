@@ -5,7 +5,7 @@ tags: ['grafana', 'Jsonnet', 'devops', 'productivity']
 ---
 
 
-Working at a company that's currently undergoing massive growth, I've recently taken an interest in the topic of developer productivity and the idea of providing engineers with [golden paths](https://engineering.atspotify.com/2020/08/17/how-we-use-golden-paths-to-solve-fragmentation-in-our-software-ecosystem/) to success. Inspired by suggestions by some of my colleagues, I started looking into [Jsonnet](https://jsonnet.org/) + [Grafonnet](https://grafana.github.io/grafonnet-lib/) as a way of providing consistent and reusable dashboards.
+Working at a company that's currently undergoing massive growth, I've recently taken an interest in the topic of developer productivity and the idea of providing engineers with [golden paths](https://engineering.atspotify.com/2020/08/17/how-we-use-golden-paths-to-solve-fragmentation-in-our-software-ecosystem/) to success. Inspired by suggestions by some of my colleagues, I started looking into [Jsonnet](https://jsonnet.org/) + [Grafonnet](https://grafana.github.io/grafonnet-lib/) as a way of providing consistent and reusable Grafana dashboards.
 
 
 An easy development workflow can be the difference between small issues being fixed on discovery and issues stacking up on a forever growing team backlog. Scripting Grafana dashboards is one of the signs of [dashboard maturity](https://grafana.com/docs/grafana/latest/best-practices/dashboard-management-maturity-levels/), but it comes at the cost of complexity and a clunkier workflow. Since a clunky development workflow can significantly impact on the quality of a project over time, I was keen to see what could be done to improve this.
