@@ -54,7 +54,7 @@ In the pipeline setup described by this post, there's a single `EventListener` t
 
 The mono-repo magic is handled by the interceptors on each `Trigger`. These interceptors pre-process the incoming Github events, _conditionally_ triggering each project's pipeline _only_ if that project's directory is modified. If one project directory is modified then only that project's pipeline will run. If both are modified then both project pipelines will run.
 
-There is a `Trigger` resource for each sub-project. Below is Project A's.
+Below is Project A's `Trigger` resource.
 
 ```
 apiVersion: triggers.tekton.dev/v1alpha1
@@ -81,17 +81,17 @@ spec:
 ```
 
 As can be seen above, the `Trigger` defines two interceptors:
- 1. A custom webhook interceptor that decorates the incoming request's body with an additional field containing a list of modified file paths (`extensions.filesChanged`). This works by delegating the business logic to a Kubernetes service running within the cluster. This interceptor service uses Github's [Compare API](https://docs.github.com/en/github/committing-changes-to-your-project/comparing-commits#comparing-commits) to fetch the list of modified files between two commits.
+ 1. A custom webhook interceptor that decorates the incoming request's body with an additional field containing a list of modified file paths. The interceptor is implemented as a Kubernetes service called `interceptor` running within the cluster. This service uses Github's [Compare API](https://docs.github.com/en/github/committing-changes-to-your-project/comparing-commits#comparing-commits) to fetch the list of modified files between two commits, adding them to into the JSON payload at `extensions.filesChanged`.
 2. A chained CEL interceptor that specifies a `filter` predicate that will _conditionally_ trigger the pipeline. This interceptor defines a predicate that only passes if the list of modified paths contains a file related to its associated sub-project, `service-a/` in the case of the above `Trigger`.
 
 
 ## Evaluation
 
-Multiple related projects can be co-located in the same repository, yet they can trigger independent pipelines. This keeps the pipeline definitions for each project _simple_, _specific_ and with a _single responsibility_. It's easy to find the pipeline execution for a given sub-project using either the Tekton Dashboard or `kubectl` as they are _unique_ pipelines.
+Multiple related projects can be co-located in the same repository without having to share a single definition. This keeps the pipeline definitions for each project _simple_, _specific_ and with a _single responsibility_. As a result, it's easy to find the pipeline execution for a given sub-project using either the Tekton Dashboard or `kubectl` as they are _unique_ pipelines.
 
 ![Tekton Dashboard](tekton-dashboard.png)
 
-Additionally, adding a `labels` fields to the `metadata` field of a `Pipeline` resource means we can easily discover pipelines that are associated with a given service or sub-project.
+Additionally, adding a `labels` fields to the `metadata` field of a `Pipeline` resource means that pipelines for a given service or sub-project can be filtered for easily.
 
 Tekton provides more flexibility compared to other pipeline tools at the cost of some additional complexity. Tekton provides the building blocks for building a CI/CD system - you need to stitch those blocks together to suite your needs.
 
