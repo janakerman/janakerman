@@ -77,7 +77,7 @@ Ideally, you'd be applying these rendered dashboard JSON files as part of your C
 
 Whilst I'd strongly recommend not previewing edits on your production Grafana instance, it's not _necessary_ to use a local Grafana instance. The downside of using a local Grafana instance is that you don't have real data when viewing your changes. Hopefully, you're using an IaC (Infrastructure as Code) tool to configure your Grafana instances data sources, so you could simply point it at your local instance to solve that.
 
-If your set up is relatively simple, a bash script is probably good enough and doesn't add too much complexity. The script below adds a Prometheus data source - hopefully, it provides some inspiration.
+Failing that, you can [provision data sources](https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources) as yaml files and mount them into the Grafana container. If your set up is relatively simple, a bash script is probably would probably do.
 
 ```bash
 #!/bin/bash
