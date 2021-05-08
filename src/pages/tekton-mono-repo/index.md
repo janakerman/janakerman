@@ -48,6 +48,8 @@ Tekton comes bundled with some out of the box interceptors:
 In the pipeline setup described by this post, there's a single `EventListener` that references a unique `Trigger` for each sub-project within the repo. Each `Trigger` references a `TriggerTemplate` configured to create `PipelineRun` for each sub-project's `Pipeline`.
 
 
+![Tekton Components](tekton-mono-components.svg)
+
 The mono-repo magic is handled by the two [interceptors](https://tekton.dev/docs/triggers/eventlisteners/#interceptors) that are chained together to process incoming Github Push Events, _conditionally_ triggering a pipeline associated with each of the sub-directories. If one project directory is modified, only that project's pipeline will run. If both are modified then both project pipelines will run.
 
 There is a `Trigger` resource for each sub-project. Below is Project A's.
