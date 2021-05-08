@@ -34,7 +34,7 @@ Using Tekton's building blocks, I wanted to see if I could trigger a _different_
 
 > EventListeners expose an addressable “Sink” to which incoming events are directed. Users can declare TriggerBindings to extract fields from events, and apply them to TriggerTemplates in order to create Tekton resources. In addition, EventListeners allow lightweight event processing using Event Interceptors.
 
-At a high level, an `EventListener` defines the endpoint for incoming events, passes the events off to a list of `Trigger` resources, which define how to map the event to a given pipeline's input parameters.  
+At a high level, an `EventListener` defines the endpoint for incoming events, passes the events off to a list of `Trigger` resources. These `Trigger` resources define how to map the event to a given pipeline's input parameters.  
 
 A Tekton `Trigger` can define interceptors that allow you to process webhook payloads before any pipeline gets triggered, potentially deciding not to trigger any pipeline at all. 
 
