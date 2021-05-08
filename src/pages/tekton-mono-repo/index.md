@@ -11,44 +11,43 @@ As a learning exercise, I wanted to see how I could put together a pipeline for 
 
 ## Tekton
 
-[Tekton](https://tekton.dev/) is an open-source framework for creating CI/CD systems. With Tekton, Kubernetes CRDs (Custom Resource Definitions) define the pipelines and pipeline stages (tasks) are orchestrated as Kubernetes pods.
+[Tekton](https://tekton.dev/) is an open-source framework for creating CI/CD systems. Tekton uses Kubernetes Custom Resource Definitions to define pipelines, and orchestrates the pipeline stages as Kubernetes pods.
 
 ## The problem
 
-Typically, a CD pipeline would be initiated by a Git web hook, such as Github's [PushEvent](https://docs.github.com/en/developers/webhooks-and-events/github-event-types#pushevent). This web hook would trigger the repositories pipeline to execute.
-
-Most CI/CD tools have the following features in common:
-* A single pipeline definition, usually in YAML (i.e `.gitlab-ci.yaml`, `.travis.yaml`, etc)
+Typically, a CD pipeline would be initiated by a Git webhook (i.e a Github push event), triggering a pipeline to run for the associated Git repository. These
+pipelines are usually defined in YAML (e.g Gitlab's `.gitlab-ci.yaml`, or Travis' `.travis.yaml`). Most CI/CD tools have the following features in common:
 * A set of stages that form a DAG (Directed Acyclic Graph)
 * Conditional logic to support optional build stages
 
-Modelling mono-repositories with the above features usually has a few issues:
+Modelling a mono-repository with the above features has a few issues:
 1. Poor visibility of a sub-project within the mono-repo as a single 'pipeline' is _shared_
 2. Pipeline definitions become increasingly complex, filled with conditional stages
 
-To improve on this, I wanted to see whether using Tekton, I could trigger different pipelines depending on the sub-directories that were modified for a given Git event.
+Using Tekton's building blocks, I wanted to see if I could trigger a _different_ pipeline depending on the sub-directories that were modified for a given Git event.
 
 ## Tekton Triggers
 
-[Triggers](https://github.com/tektoncd/triggers) is the sub-project of Tekton that is responsible for triggering pipelines in response to external events via web hooks. Tekton's own documentation gives a good overview of the moving parts.
+[Triggers](https://github.com/tektoncd/triggers) is the sub-project of Tekton that is responsible for triggering pipelines in response to external events via webhooks. Tekton's own documentation gives a good overview.
 
 > EventListeners expose an addressable “Sink” to which incoming events are directed. Users can declare TriggerBindings to extract fields from events, and apply them to TriggerTemplates in order to create Tekton resources. In addition, EventListeners allow lightweight event processing using Event Interceptors.
 
-An `EventListener` defines the endpoint for incoming events, passes the events off a list of `Trigger`s, which define  how to create a pipeline resource from the received event (using `TriggerBinding` and `TriggerTemplate` resources).  
+At a high level, an `EventListener` defines the endpoint for incoming events, passes the events off a list of `Trigger`s, which define how to map the event to a given pipeline's input parameters.  
 
-A Tekton `Trigger` can define interceptors allow you to process HTTP request payloads before any pipeline is triggered, and potentially deciding not to execute at all. Tekton comes bundled with some out of the box interceptor implementations:
-* Interceptors for common web hook sources (Gitlab, Github, Bitbucket), handling signature verification and providing filtering for specific event types.
-* A [CEL Interceptor](https://tekton.dev/docs/triggers/eventlisteners/#cel-interceptors) for transforming/conditionally triggering pipelines using the CEL expression language.
-* [web hook interceptors](https://tekton.dev/docs/triggers/eventlisteners/#webhook-interceptors) for implementing your own web hook processing as a Kubernetes service.
+A Tekton `Trigger` can define interceptors that allow you to process webhook payloads before any pipeline gets triggered, potentially deciding to hault execution. Tekton comes bundled with some out of the box interceptors:
+
+* Interceptors for common webhook sources such as Gitlab, Github, Bitbucket. These handle signature verification and provide filtering for specific event types.
+* A [CEL Interceptor](https://tekton.dev/docs/triggers/eventlisteners/#cel-interceptors) that uses the CEL expression language to transform webhook payloads and evaluate predicates.
+* [Webhook interceptors](https://tekton.dev/docs/triggers/eventlisteners/#webhook-interceptors) for implementing custom webhook processing.
 
 
 ## The solution
 
-In the pipeline setup described by this post, there's a single `EventTrigger` that references a unique `Trigger` for each project within the repo. Each `Trigger` references a `TriggerTemplate` configured to create `PipelineRun` for each sub-project's unique `Pipeline`.
+In the pipeline setup described by this post, there's a single `EventListener` that references a unique `Trigger` for each sub-project within the repo. Each `Trigger` references a `TriggerTemplate` configured to create `PipelineRun` for each sub-project's `Pipeline`.
 
 ![Tekton Dashboard](tekton-dashboard.svg)
 
-The mono-repo magic is handled by the two [interceptors](https://tekton.dev/docs/triggers/eventlisteners/#interceptors) that are chained together to process incoming Github Push Events, _conditionally_ trigger a pipeline associated with each sub-directories. If one project directory is modified, only that project's pipeline will run. If both are modified, both project pipelines will run.
+The mono-repo magic is handled by the two [interceptors](https://tekton.dev/docs/triggers/eventlisteners/#interceptors) that are chained together to process incoming Github Push Events, _conditionally_ triggering a pipeline associated with each of the sub-directories. If one project directory is modified, only that project's pipeline will run. If both are modified then both project pipelines will run.
 
 There is a `Trigger` resource for each sub-project. Below is Project A's.
 
@@ -77,23 +76,23 @@ spec:
 ```
 
 As can be seen above, the `Trigger` defines two interceptors:
- 1. A custom web hook interceptor that decorates the incoming request's body with an additional field containing a list of modified file paths (`extensions.filesChanged`). This works by delegating the business logic to an Kubernetes service running within the cluster. This interceptor service uses Github's [Compare API](https://docs.github.com/en/github/committing-changes-to-your-project/comparing-commits#comparing-commits) to fetch the list of modified files.
-2. A chained CEL interceptor specifies a `filter` predicate that will _conditionally_ trigger pipelines only if the relevant directory contains changes. This predicate is hard coded to only pass if it finds an entry in the list of modified files for it's target sub-project, `service-a/` in the case of the above `Trigger`.
+ 1. A custom webhook interceptor that decorates the incoming request's body with an additional field containing a list of modified file paths (`extensions.filesChanged`). This works by delegating the business logic to a Kubernetes service running within the cluster. This interceptor service uses Github's [Compare API](https://docs.github.com/en/github/committing-changes-to-your-project/comparing-commits#comparing-commits) to fetch the list of modified files between two commits.
+2. A chained CEL interceptor that specifies a `filter` predicate that will _conditionally_ trigger the pipeline. This interceptor defines a predicate that only passes if the list of modified paths contains a file related to its associated sub-project, `service-a/` in the case of the above `Trigger`.
 
 
 ## Evaluation
 
-One of the main benefits of this approach is that a single push event can trigger multiple different pipelines, supporting unique workflows for each sub-project within the mono-repository. It's easy to find the pipeline execution for a given sub-project using either the Tekton Dashboard or `kubectl` as they are _unique_ pipelines.  
+Multiple related projects can be co-located in the same repository, yet they can trigger independent pipelines. This keeps the pipeline definitions for each project _simple_, _specific_ and with a _single responsibility_. It's easy to find the pipeline execution for a given sub-project using either the Tekton Dashboard or `kubectl` as they are _unique_ pipelines.
 
 ![Component diagram](tekton-mono-components.svg)
 
-Additionally, adding a `labels` fields to the `Pipeline`'s `metadata` field means we can easily discover pipelines that are associated with a given service/sub-project.
+Additionally, adding a `labels` fields to the `metadata` field of a `Pipeline` resource means we can easily discover pipelines that are associated with a given service or sub-project.
 
-Tekton provides more flexibility compared to other pipeline tools I've toyed with. This comes at the cost of some additional complexity as you need to stitch the building blocks together for your use case.
+Tekton provides more flexibility compared to other pipeline tools at the cost of some additional complexity. Tekton provides the building blocks for building a CI/CD system - you need to stitch those blocks together to suite your needs.
 
 
 ## Taking it further
 
 Whilst I wouldn't say the setup is very complex, without some familiarity of Tekton the process of adding a new sub-project isn't _super_ simple. I'm not that familiar with Helm, but I _think_ this you could define this setup as a Helm chart providing a mapping of sub-projects to pipelines as a value.
 
-Perhaps as Tekton grows in popularity, we'll see more out-of-the-box Tekton setups distributed using the same tools used to distribute applications that run on Kubernetes (e.g Helm). 
+Perhaps as Tekton grows in popularity, we'll see more out-of-the-box Tekton setups distributed using the same methods used to distribute applications that run on Kubernetes (e.g Helm).
