@@ -16,7 +16,9 @@ As a learning exercise, I wanted to see how I could put together a pipeline for 
 ## The problem
 
 Typically, a CD pipeline would be initiated by a Git webhook (i.e a Github push event), triggering a pipeline to run for the associated Git repository. These
-pipelines are usually defined in YAML (e.g Gitlab's `.gitlab-ci.yaml`, or Travis' `.travis.yaml`). Most CI/CD tools have the following features in common:
+pipelines are usually defined in YAML (e.g Gitlab's `.gitlab-ci.yaml`, or Travis' `.travis.yaml`).
+
+Most CI/CD tools have the following features in common:
 * A set of stages that form a DAG (Directed Acyclic Graph)
 * Conditional logic to support optional build stages
 
