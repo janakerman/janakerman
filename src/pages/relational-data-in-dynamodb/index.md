@@ -67,7 +67,7 @@ So we've got four entities: _Breakfast_, _Order, _Item_, and _Dev_. To fulfil re
 
 Since the entities have different attributes, this would require the creation of a Global Secondary Index (GSI) for every single entity.
 
-Whilst AWS's soft limit of 20GSIs per table means that this is a feasible approach for a lot of applications, it gets difficult as the complexity of your service increases. Also, there is additional storage and provisioned capacity costs for each index. We can be a little more efficient than that.
+Whilst AWS's soft limit of 20 GSIs per table means that this is a feasible approach for a lot of applications, it gets difficult as the complexity of your service increases. Also, there is additional storage and provisioned capacity costs for each index. We can be a little more efficient than that.
 
 Instead, we can "overload" the `Primary Index` by creating two more generic columns: a `HASH` key named `PartitionKey` and a `RANGE` key called `SortKey`. The name of the index attributes no longer reflect the attribute's content. At the downside of less intuitive attribute names, we gain the ability to use a single index for all our entity access.
 
@@ -88,7 +88,7 @@ Look at our new `Primary Index` represented by the table below.
 
 The next access pattern we are going to solve is the ability to get all entities of a given type.
 
-In a relational database, records are categorised into respective tables, but since our NoSQL table structure is a mashup of different entities we need to approach this in a different way.
+In a relational database, records are categorised into respective tables, but since our NoSQL table structure is a mash up of different entities we need to approach this in a different way.
 
 At the moment, it isn't possible to query the above `Primary Index` for anything other than entity IDs. You may have noticed in the above examples that we have stored a String representing the entity type in the `SortKey` column. This was intentional! By creating an additional `Global Secondary Index` (`GSI`) with a `HASH` on the `SortKey` column, it is now possible to query for specific entities by querying for their type.
 
@@ -190,6 +190,6 @@ This post has demonstrated a technique for modelling relational data in DynamoDB
 
 Using DynamoDB has some amazing benefits and can really get you up and running with a production-ready database in a short space of time. Whether this works long term for your application is really a call you'll have to make.
 
-As always, **abstract** the database code from your business code, and be pragmatic - don't be afraid to iterate quickly and throw things away when they don't work anymore!
+As always, **abstract** the database code from your business code, and be pragmatic - don't be afraid to iterate quickly and throw things away when they don't work any more!
 
 Checkout this [GitHub](https://github.com/janakerman/blog-relational-dynamo) project and follow the instructions in the README.md to create a CloudFormation stack seeded with the data structure described in this post.

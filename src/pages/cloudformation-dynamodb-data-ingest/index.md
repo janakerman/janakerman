@@ -20,7 +20,7 @@ Since option #1 is trivial, I decided to see how I might go about achieving #2, 
 
 ## CloudFormation Custom Resources
 
-CloudFormation custom resources allow you to write provisioning logic that will be run anytime your stack is created, updated or deleted. It provides a hook into the CloudFormation stack lifecycle whereby you can do whatever you please. AWS document an [example](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/walkthrough-custom-resources-lambda-lookup-amiids.html) whereby as part of your stack creation you can fetch latest AMI for your instance type and region. Other use cases could be:
+CloudFormation custom resources allow you to write provisioning logic that will be run anytime your stack is created, updated or deleted. It provides a hook into the CloudFormation stack life cycle whereby you can do whatever you please. AWS document an [example](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/walkthrough-custom-resources-lambda-lookup-amiids.html) whereby as part of your stack creation you can fetch latest AMI for your instance type and region. Other use cases could be:
 
 - Managing an AWS resource unsupported by CloudFormation
 - Managing infrastructure completely outside of AWS
@@ -86,7 +86,7 @@ _I'll be referencing this [GitHub project](https://github.com/janakerman/blog-re
 
 ### The Ingest Stack
 
-The ingest stack is a standalone stack that has three resources and a single output. The resources are, an S3 bucket for the ingest data, a role defining access permissions for the Lamda, and the Lambda with the source code inline.
+The ingest stack is a stand-alone stack that has three resources and a single output. The resources are, an S3 bucket for the ingest data, a role defining access permissions for the Lambda, and the Lambda with the source code inline.
 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
@@ -127,7 +127,7 @@ Outputs:
 
 As you can see above, the Lambda function is passed the S3 bucket's ARN as an environment variable. The stack's output is the ARN of the Lambda function, which we'll be utilising in our next stack.
 
-It's worth noting that the `LambdaExecutionRole` is overly permissive and was set up for demo purposes. Also, I've inlined a rather large block of Javascript code for ease too, but this could get unwieldy.
+It's worth noting that the `LambdaExecutionRole` is overly permissive and was set up for demo purposes. Also, I've inlined a rather large block of JavaScript code for ease too, but this could get unwieldy.
 
 If you want to follow along, now would be the time to check out the git repo and create the stack (in the project root).
 
@@ -216,12 +216,12 @@ Once the stack is completed, you should be able to check the data is in the via 
 
 Using this approach you can create your environment and have it in a ready and useable state. You can see how this could be useful to spin up a test environment with some known data or ingest some initial user data from AWS Cognito, for example.
 
-Having environment initialisation hooked into the creation of the environment gives you a known and consistent starting point, avoiding the need for human hands to get involved in some error prone manual ingest process. I believe this is so important when it comes to building a reliable CI/CD pipline.
+Having environment initialisation hooked into the creation of the environment gives you a known and consistent starting point, avoiding the need for human hands to get involved in some error prone manual ingest process. I believe this is so important when it comes to building a reliable CI/CD pipeline.
 
 Writing a script could have been potentially simpler, but I wouldn't have learnt about the power that custom resources give you in CloudFormation templates!
 
 ## Further considerations:
-- The custom resource is called at multiple points. Here's an interesting [post](https://www.puresec.io/blog/a-deep-dive-on-aws-cloudformation-custom-resources) on the lifecycle of a custom resource.
+- The custom resource is called at multiple points. Here's an interesting [post](https://www.puresec.io/blog/a-deep-dive-on-aws-cloudformation-custom-resources) on the life cycle of a custom resource.
 - If your Lambda errors and doesn’t respond, this can cause the CloudFormation stack to hang until it times out (around an hour). Develop your Lambda locally with SAM local and use a mock event to test with!
 - If you want to re-ingest data, updating the stack won't help you as nothing has changed, but you can invoke the Lambda directly.
 

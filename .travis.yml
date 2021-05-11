@@ -10,4 +10,4 @@ script:
   - npm install
   - npm run lint
   - npm run build
-  - npm run spellcheck -- --report
+  - npm run spellcheck -- --report --ignore-numbers --en-gb

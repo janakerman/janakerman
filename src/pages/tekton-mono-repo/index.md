@@ -100,4 +100,4 @@ Tekton provides more flexibility compared to other pipeline tools at the cost of
 
 Whilst I wouldn't say the setup is very complex, without some familiarity of Tekton the process of adding a new sub-project isn't _super_ simple. I'm not that familiar with Helm, but I _think_ this you could define this setup as a Helm chart providing a mapping of sub-projects to pipelines as a value.
 
-Perhaps as Tekton grows in popularity, we'll see more out-of-the-box Tekton setups distributed using the same methods used to distribute applications that run on Kubernetes (e.g Helm).
+Perhaps as Tekton grows in popularity, we'll see more out-of-the-box Tekton set ups distributed using the same methods used to distribute applications that run on Kubernetes (e.g Helm).
