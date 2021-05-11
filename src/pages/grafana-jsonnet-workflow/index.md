@@ -48,7 +48,7 @@ services:
     environment:
       - GRAFANA_URL=http://grafana:3000
     working_dir: /src/dashboards/
-    entrypoint: >
+    entry point: >
       ash -c "grr apply jsonnet/main.jsonnet &&
         grr watch jsonnet/ jsonnet/main.jsonnet"
 ```
@@ -127,7 +127,7 @@ local grafana = import 'vendor/grafonnet/grafana.libsonnet'
 }
 ```
 
-Jsonnet supports importing from other Jsonnet files so it's clean enough to maintain a single entrypoint and import the individual dashboards. 
+Jsonnet supports importing from other Jsonnet files so it's clean enough to maintain a single entry point and import the individual dashboards. 
 
 Note that not only is the `uuid` field important for Grizzly to work correctly, it's also used as the name for your rendered JSON file.
 

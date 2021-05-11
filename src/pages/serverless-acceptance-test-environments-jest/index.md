@@ -24,7 +24,7 @@ With a Lambda and DynamoDB stack we pay for _exactly_ what we use, so there lite
 
 #Jest
 
-Jest is a modern Javascript testing framework. It executes tests in parallel with one isolated process per test suite (tests in a single spec file).
+Jest is a modern JavaScript testing framework. It executes tests in parallel with one isolated process per test suite (tests in a single spec file).
 
 We can use the hooks jest provides for setting up its execution environment to also set up a Serverless stack per test suite.
 
