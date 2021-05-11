@@ -98,6 +98,26 @@ Tekton provides more flexibility compared to other pipeline tools at the cost of
 
 ## Taking it further
 
-Whilst I wouldn't say the setup is very complex, without some familiarity of Tekton the process of adding a new sub-project isn't _super_ simple. I'm not that familiar with Helm, but I _think_ this you could define this setup as a Helm chart providing a mapping of sub-projects to pipelines as a value.
+Whilst I wouldn't say the setup is very complex, without some familiarity of Tekton the process of adding a new sub-project isn't _super_ simple. As Tekton pipelines are defined as plain old Kubernetes CRDs they can be distributed the same way as an application might be, Helm.
 
-Perhaps as Tekton grows in popularity, we'll see more out-of-the-box Tekton set ups distributed using the same methods used to distribute applications that run on Kubernetes (e.g Helm).
+Below is a the `values.yaml` of a [Helm chart](
+https://github.com/janakerman/tekton-mono-repo-demo/tree/main/helm/tekton-multi-pipeline-repo) written to wrap the trigger setup described in this post.
+
+```yaml
+# The name of the repository this trigger is created for. Used to name resources.
+repositoryName: tekton-mono-repo-demo
+# An Ingress is created for this endpoint. e.g /my-repo-trigger
+webhookEndpoint: /tekton-mono-repo-demo
+# The name of the service account that the event listener runs under.
+serviceAccount: ...
+# A list of the projects within the repository mapped to the pipeline they should trigger.
+projects:
+  - name: project-a
+    path: project-a/
+    pipeline: project-a-pipeline
+  - name: project-b
+    path: project-b/
+    pipeline: project-b-pipeline
+```
+
+I think this demonstrates that Helm provides a great way to reuse and distribute Tekton pipeline best practices. Deploying a Helm chart or modifying its values is objectively more simple than needing to understand the building blocks of Tekton.  
