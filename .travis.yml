@@ -4,7 +4,7 @@ os:
   - linux
 
 node_js:
-  - "16"
+  - "11"
 
 script:
   - npm install
