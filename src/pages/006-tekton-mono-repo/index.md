@@ -123,4 +123,4 @@ projects:
     pipeline: project-b-pipeline
 ```
 
-Helm provide a great wa reuse and distribute Tekton pipeline best practices throughout a company. Deploying a Helm chart or modifying its values is objectively more simple than needing to understanding building blocks of Tekton.  
+I think this demonstrates that Helm provides a great way to reuse and distribute Tekton pipeline best practices. Deploying a Helm chart or modifying its values is objectively more simple than needing to understand the building blocks of Tekton.  
